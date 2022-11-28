@@ -63,10 +63,10 @@ def main():
     for gupa in range(3):
         gripper.set_joint_value_target([0.9, 0.9])
         gripper.go()
-        rospy.sleep(0.3)
+        rospy.sleep(0.7)
         gripper.set_joint_value_target([0.3, 0.3])
         gripper.go()
-        rospy.sleep(0.3)
+        rospy.sleep(0.7)
 
 
 
@@ -170,6 +170,7 @@ def main():
     arm.go()  # 実行
 
     # SRDFに定義されている"home"の姿勢にする
+    # どんなスタンプを押したのか見せつける
     arm.set_named_target("home")
     arm.go()
     rospy.sleep(2.0)
