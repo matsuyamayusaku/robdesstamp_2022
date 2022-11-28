@@ -63,8 +63,10 @@ def main():
     for gupa in range(3):
         gripper.set_joint_value_target([0.9, 0.9])
         gripper.go()
+        rospy.sleep(0.3)
         gripper.set_joint_value_target([0.3, 0.3])
         gripper.go()
+        rospy.sleep(0.3)
 
 
 
@@ -170,6 +172,45 @@ def main():
     # SRDFに定義されている"home"の姿勢にする
     arm.set_named_target("home")
     arm.go()
+    rospy.sleep(2.0)
+
+
+    # スタンプを元の位置に戻す
+    target_pose = geometry_msgs.msg.Pose()
+    target_pose.position.x = 0.15
+    target_pose.position.y = pos_y
+    target_pose.position.z = 0.10
+    q = quaternion_from_euler(-3.14, 0.0, -3.14/2.0)  # 上方から掴みに行く場合
+    target_pose.orientation.x = q[0]
+    target_pose.orientation.y = q[1]
+    target_pose.orientation.z = q[2]
+    target_pose.orientation.w = q[3]
+    arm.set_pose_target(target_pose)  # 目標ポーズ設定
+    arm.go()  # 実行
+
+    # ハンドを開く
+    gripper.set_joint_value_target([0.7, 0.7])
+    gripper.go()
+
+    # 上げる
+    target_pose = geometry_msgs.msg.Pose()
+    target_pose.position.x = 0.15
+    target_pose.position.y = pos_y
+    target_pose.position.z = 0.3
+    q = quaternion_from_euler(-3.14, 0.0, -3.14/2.0)  # 上方から掴みに行く場合
+    target_pose.orientation.x = q[0]
+    target_pose.orientation.y = q[1]
+    target_pose.orientation.z = q[2]
+    target_pose.orientation.w = q[3]
+    arm.set_pose_target(target_pose)  # 目標ポーズ設定
+    arm.go()							# 実行
+
+
+    # SRDFに定義されている"home"の姿勢にする
+    arm.set_named_target("home")
+    arm.go()
+
+
 
     print("done")
 
