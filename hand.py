@@ -6,15 +6,19 @@ import mediapipe as mp
 import rospy
 import math
 import sys
+from geometry_msgs.msg import Point
+from numpy.lib.type_check import imag
+from robotdesign3_2021_1.msg import CustomArray
 mp_drawing = mp.solutions.drawing_utils
-#mp_drawing_styles = mp.solutions.drawing_styles
+mp_drawing_styles = mp.solutions.drawing_styles
 mp_hands = mp.solutions.hands
 
 def main():
   rospy.init_node("MediaPipe_node")
-
+  hand_position = rospy.Publisher('hand_topic', CustomArray, queue_size=10)
   # For webcam input:
   cap = cv2.VideoCapture(0)
+  array_points = CustomArray()
   with mp_hands.Hands(
       model_complexity=0,
       min_detection_confidence=0.5,
@@ -34,6 +38,7 @@ def main():
 
       # Draw the hand annotations on the image.
       image.flags.writeable = True
+      image_height, image_width, _ = image.shape
       image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
       if results.multi_hand_landmarks:
         for hand_landmarks in results.multi_hand_landmarks:
