@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 import cv2
 import mediapipe as mp
 mp_drawing = mp.solutions.drawing_utils
