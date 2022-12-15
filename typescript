@@ -1,29 +1,0 @@
-Script started on 2022-12-15 14:50:07+09:00 [TERM="xterm-256color" TTY="/dev/pts/0" COLUMNS="101" LINES="55"]
-]0;hiroki@hiroki-HP-Spectre-x360-Convertible-13-ap0xxx: ~/catkin_ws/src/RobdesStamp_2022[01;32mhiroki@hiroki-HP-Spectre-x360-Convertible-13-ap0xxx[00m:[01;34m~/catkin_ws/src/RobdesStamp_2022[00m$ ls
-CMakeLists.txt  README.md  [0m[01;34mlaunch[0m  [01;34mmsg[0m  package.xml  [01;34mscripts[0m  typescript
-]0;hiroki@hiroki-HP-Spectre-x360-Convertible-13-ap0xxx: ~/catkin_ws/src/RobdesStamp_2022[01;32mhiroki@hiroki-HP-Spectre-x360-Convertible-13-ap0xxx[00m:[01;34m~/catkin_ws/src/RobdesStamp_2022[00m$ cd scripts/
-]0;hiroki@hiroki-HP-Spectre-x360-Convertible-13-ap0xxx: ~/catkin_ws/src/RobdesStamp_2022/scripts[01;32mhiroki@hiroki-HP-Spectre-x360-Convertible-13-ap0xxx[00m:[01;34m~/catkin_ws/src/RobdesStamp_2022/scripts[00m$ ls
-[0m[01;32mFixed_motion_temporary.py[0m  crane_x7.srdf  [01;32mgripper_action_example.py[0m  [01;32mhand.py[0m  [01;32mmain_process.py[0m
-]0;hiroki@hiroki-HP-Spectre-x360-Convertible-13-ap0xxx: ~/catkin_ws/src/RobdesStamp_2022/scripts[01;32mhiroki@hiroki-HP-Spectre-x360-Convertible-13-ap0xxx[00m:[01;34m~/catkin_ws/src/RobdesStamp_2022/scripts[00m$ code [K[K[K[K[Kpython3  hand.py 
-Unable to register with master node [http://localhost:11311]: master may not be running yet. Will keep trying.
-^\終了 (コアダンプ)
-]0;hiroki@hiroki-HP-Spectre-x360-Convertible-13-ap0xxx: ~/catkin_ws/src/RobdesStamp_2022/scripts[01;32mhiroki@hiroki-HP-Spectre-x360-Convertible-13-ap0xxx[00m:[01;34m~/catkin_ws/src/RobdesStamp_2022/scripts[00m$ python3 hand.py 
-Unable to register with master node [http://localhost:11311]: master may not be running yet. Will keep trying.
-^\終了 (コアダンプ)
-]0;hiroki@hiroki-HP-Spectre-x360-Convertible-13-ap0xxx: ~/catkin_ws/src/RobdesStamp_2022/scripts[01;32mhiroki@hiroki-HP-Spectre-x360-Convertible-13-ap0xxx[00m:[01;34m~/catkin_ws/src/RobdesStamp_2022/scripts[00m$ ls
-[0m[01;32mFixed_motion_temporary.py[0m  crane_x7.srdf  [01;32mgripper_action_example.py[0m  [01;32mhand.py[0m  [01;32mmain_process.py[0m
-]0;hiroki@hiroki-HP-Spectre-x360-Convertible-13-ap0xxx: ~/catkin_ws/src/RobdesStamp_2022/scripts[01;32mhiroki@hiroki-HP-Spectre-x360-Convertible-13-ap0xxx[00m:[01;34m~/catkin_ws/src/RobdesStamp_2022/scripts[00m$ cd
-]0;hiroki@hiroki-HP-Spectre-x360-Convertible-13-ap0xxx: ~[01;32mhiroki@hiroki-HP-Spectre-x360-Convertible-13-ap0xxx[00m:[01;34m~[00m$ cd -
-/home/hiroki/catkin_ws/src/RobdesStamp_2022/scripts
-]0;hiroki@hiroki-HP-Spectre-x360-Convertible-13-ap0xxx: ~/catkin_ws/src/RobdesStamp_2022/scripts[01;32mhiroki@hiroki-HP-Spectre-x360-Convertible-13-ap0xxx[00m:[01;34m~/catkin_ws/src/RobdesStamp_2022/scripts[00m$ ls
-[0m[01;32mFixed_motion_temporary.py[0m  crane_x7.srdf  [01;32mgripper_action_example.py[0m  [01;32mhand.py[0m  [01;32mmain_process.py[0m
-]0;hiroki@hiroki-HP-Spectre-x360-Convertible-13-ap0xxx: ~/catkin_ws/src/RobdesStamp_2022/scripts[01;32mhiroki@hiroki-HP-Spectre-x360-Convertible-13-ap0xxx[00m:[01;34m~/catkin_ws/src/RobdesStamp_2022/scripts[00m$ girt [K[K[Kt che ckout Hiroki 
-M	scripts/hand.py
-Already on 'Hiroki'
-Your branch is up to date with 'origin/Hiroki'.
-]0;hiroki@hiroki-HP-Spectre-x360-Convertible-13-ap0xxx: ~/catkin_ws/src/RobdesStamp_2022/scripts[01;32mhiroki@hiroki-HP-Spectre-x360-Convertible-13-ap0xxx[00m:[01;34m~/catkin_ws/src/RobdesStamp_2022/scripts[00m$ python3  hand.py 
-Unable to register with master node [http://localhost:11311]: master may not be running yet. Will keep trying.
-^\終了 (コアダンプ)
-]0;hiroki@hiroki-HP-Spectre-x360-Convertible-13-ap0xxx: ~/catkin_ws/src/RobdesStamp_2022/scripts[01;32mhiroki@hiroki-HP-Spectre-x360-Convertible-13-ap0xxx[00m:[01;34m~/catkin_ws/src/RobdesStamp_2022/scripts[00m$ ls
-[0m[01;32mFixed_motion_temporary.py[0m  crane_x7.srdf  [01;32mgripper_action_example.py[0m  [01;32mhand.py[0m  [01;32mmain_process.py[0m
-]0;hiroki@hiroki-HP-Spectre-x360-Convertible-13-ap
