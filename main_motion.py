@@ -26,14 +26,24 @@ import random
 
 class Home(object):
 
-    def __init__(self):
-        rospy.init_node("motion")
-        rospy.Subscriber('/hand_topic_x', Float32, self.callback, queue_size=1)
-        rospy.Subscriber('/hand_topic_y', Float32, self.callback, queue_size=1)
-        self.robot = moveit_commander.RobotCommander()
-
+    def conversion(self):
+        try:
+            # カメラ座標を持ってくる
+            self.cam_x = message_filters.Subscriber("hand_topic_x", Float32)
+            self.cam_y = message_filters.Subscriber("hand_topic_y", Float32)
+            inversion = -1 #カメラが逆さに付いているので
+            ratio_cm = 0.05 #[cm] あるカメラ座標の値のときのアーム座標のずれ
+            self.cam_x = (cam_x + ratio_cm) * inversion
+            self.cam_y = (cam_y + ratio_cm) * inversion
+            print('x:' + cam_x + 'y:' + cam_y)
+        except:
+            self.cam_x = 0
+            self.cam_y = 0
+            print('no camera coordinates')
 
     def motion(self):
+        rospy.init_node("motion")
+        self.robot = moveit_commander.RobotCommander()
         arm = moveit_commander.MoveGroupCommander("arm")
         arm.set_max_velocity_scaling_factor(0.12)
         arm.set_max_acceleration_scaling_factor(0.5)
@@ -149,20 +159,12 @@ class Home(object):
         arm.go()  # 実行
         print("I'll stamp!!")
 
-        try:
-            # カメラ座標を持ってくる
-            cam_x = message_filters.Subscriber("hand_topic_x", Float32)
-            cam_y = message_filters.Subscriber("hand_topic_y", Float32)
-            print('x:' + cam_x + 'y:' + cam_y)
-        except:
-            cam_x = 0
-            cam_y = 0
-            print('no camera coordinates')
+        self.conversion()
 
         # 下ろす
         target_pose = geometry_msgs.msg.Pose()
-        target_pose.position.x = 0.43 + cam_x
-        target_pose.position.y = 0.0 + cam_y
+        target_pose.position.x = 0.43 + self.conversion.cam_x
+        target_pose.position.y = 0.0 + self.conversion.cam_y
         target_pose.position.z = 0.10
         q = quaternion_from_euler(-3.14, 0.0, -3.14/2.0)  # 上方から掴みに行く場合
         target_pose.orientation.x = q[0]
