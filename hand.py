@@ -6,19 +6,19 @@ import mediapipe as mp
 import rospy
 import math
 import sys
-from geometry_msgs.msg import Point
-from numpy.lib.type_check import imag
-from robotdesign3_2021_1.msg import CustomArray
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_hands = mp.solutions.hands
+from std_msgs.msg import Float32
+from sensor_msgs.msg import Image
 
 def main():
   rospy.init_node("MediaPipe_node")
-  hand_position = rospy.Publisher('hand_topic', CustomArray, queue_size=10)
+  hand_position_x = rospy.Publisher('hand_topic_x', Float32, queue_size=10)
+  hand_position_y = rospy.Publisher('hand_topic_y', Float32, queue_size=10)
   # For webcam input:
-  cap = cv2.VideoCapture(0)
-  array_points = CustomArray()
+  #cap = cv2.VideoCapture(0)
+  cap = rospy.Subscriber("/camera/color/image_info", Image, self.color_callback_and_convert)
   with mp_hands.Hands(
       model_complexity=0,
       min_detection_confidence=0.5,
@@ -57,16 +57,10 @@ def main():
           cv2.circle(image, (gap1x,gap1y), 5, (0, 255, 0), 2)
           gap1x,gap1y = gap1x-image_width/2,-(gap1y-image_height/2)
 
-          array_points.points = []
-          point_1 = Point()
-          point_1.x = gap1x/3000
-          point_1.y = gap1y/3000
-          point_1.z = 0
-          array_points.points.append(point_1)
-          hand_position.publish(array_points)
-          #カメラに表示
-          cv2.putText(image,"gap1x:"+str(gap1x)+"gap1y:"+str(gap1y),(10,30),cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2, cv2.LINE_AA)
-
+          point_x = gap1x/3000
+          point_y = gap1y/3000
+          hand_position_x.publish(point_x)
+          hand_position_y.publish(point_y)
 
           mp_drawing.draw_landmarks(
               image,
@@ -76,9 +70,13 @@ def main():
               mp_drawing_styles.get_default_hand_connections_style())
       # Flip the image horizontally for a selfie-view display.
       cv2.imshow('MediaPipe Hands', cv2.flip(image, 1))
+      
+      #カメラに座標表示
+      cv2.putText(image,"gap1x:"+str(gap1x)+"gap1y:"+str(gap1y),(10,30),cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2, cv2.LINE_AA)
 
       if cv2.waitKey(5) & 0xFF == 27:
         break
+      
 if __name__ == '__main__':
   try:
     main()
