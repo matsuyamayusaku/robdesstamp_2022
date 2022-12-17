@@ -20,7 +20,8 @@ import moveit_commander
 import geometry_msgs.msg
 import rosnode
 from tf.transformations import quaternion_from_euler
-
+from std_msgs.msg import Float32
+import message_filters
 import random
 
 class Home(object):
@@ -148,10 +149,20 @@ class Home(object):
         arm.go()  # 実行
         print("I'll stamp!!")
 
+        try:
+            # カメラ座標を持ってくる
+            cam_x = message_filters.Subscriber("hand_topic_x", Float32)
+            cam_y = message_filters.Subscriber("hand_topic_y", Float32)
+            print('x:' + cam_x + 'y:' + cam_y)
+        except:
+            cam_x = 0
+            cam_y = 0
+            print('no camera coordinates')
+
         # 下ろす
         target_pose = geometry_msgs.msg.Pose()
-        target_pose.position.x = 0.43
-        target_pose.position.y = 0.0
+        target_pose.position.x = 0.43 + cam_x
+        target_pose.position.y = 0.0 + cam_y
         target_pose.position.z = 0.10
         q = quaternion_from_euler(-3.14, 0.0, -3.14/2.0)  # 上方から掴みに行く場合
         target_pose.orientation.x = q[0]
