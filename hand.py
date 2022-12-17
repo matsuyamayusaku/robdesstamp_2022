@@ -10,37 +10,19 @@ mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_hands = mp.solutions.hands
 from std_msgs.msg import Float32
-from sensor_msgs.msg import Image
-from cv_bridge import CvBridge, CvBridgeError
 
 class Home(object):
-  def __init__(self):
     rospy.init_node("MediaPipe_node")
-    self.bridge = CvBridge()
-    self.subscribed_image = rospy.Subscriber("/camera/color/image_info", Image, self.callback)
-    self.hand_position_x = rospy.Publisher('hand_topic_x', Float32, queue_size=10)
-    self.hand_position_y = rospy.Publisher('hand_topic_y', Float32, queue_size=10)
-
-  def main(self):
-    try:
-      rospy.spin()
-    except KeyboardInterrupt:
-      print("daaa!")
-      cv2.destroyAllWindows()
-
-  def callback(self, msg):
-    try:
-      self.cap = self.bridge.imgmsg_to_cv2(msg, "bgr8")
-    except CvBridgeError as err:
-      print(err)
+    hand_position_x = rospy.Publisher('hand_topic_x', Float32, queue_size=10)
+    hand_position_y = rospy.Publisher('hand_topic_y', Float32, queue_size=10)
     
-    #cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(4)
     with mp_hands.Hands(
         model_complexity=0,
         min_detection_confidence=0.5,
         min_tracking_confidence=0.5) as hands:
       while not rospy.is_shutdown():
-        success, image = self.cap.read()
+        success, image = cap.read()
         if not success:
           print("Ignoring empty camera frame.")
           # If loading a video, use 'break' instead of 'continue'.
@@ -75,8 +57,8 @@ class Home(object):
 
             point_x = gap1x/3000
             point_y = gap1y/3000
-            self.hand_position_x.publish(point_x)
-            self.hand_position_y.publish(point_y)
+            hand_position_x.publish(point_x)
+            hand_position_y.publish(point_y)
 
             mp_drawing.draw_landmarks(
                 image,
