@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 # Copyright 2018 RT Corporation
@@ -33,9 +33,9 @@ class Home(object):
             self.cam_y = message_filters.Subscriber("hand_topic_y", Float32)
             inversion = -1 #カメラが逆さに付いているので
             ratio_cm = 0.05 #[cm] あるカメラ座標の値のときのアーム座標のずれ
-            self.cam_x = (cam_x + ratio_cm) * inversion
-            self.cam_y = (cam_y + ratio_cm) * inversion
-            print('x:' + cam_x + 'y:' + cam_y)
+            self.cam_x = (self.cam_x + ratio_cm) * inversion
+            self.cam_y = (self.cam_y + ratio_cm) * inversion
+            print('x:' + self.cam_x + 'y:' + self.cam_y)
         except:
             self.cam_x = 0
             self.cam_y = 0
@@ -54,10 +54,10 @@ class Home(object):
         rospy.sleep(1.0)
 
         print("Group names:")
-        print(robot.get_group_names())
+        print(self.robot.get_group_names())
 
         print("Current state:")
-        print(robot.get_current_state())
+        print(self.robot.get_current_state())
 
         # アーム初期ポーズを表示
         arm_initial_pose = arm.get_current_pose().pose
@@ -128,7 +128,7 @@ class Home(object):
         arm.go()  # 実行
 
         # ハンドを閉じる
-        gripper.set_joint_value_target([0.4, 0.4])
+        gripper.set_joint_value_target([0.3, 0.3])
         gripper.go()
 
         # 持ち上げる
@@ -163,8 +163,8 @@ class Home(object):
 
         # 下ろす
         target_pose = geometry_msgs.msg.Pose()
-        target_pose.position.x = 0.43 + self.conversion.cam_x
-        target_pose.position.y = 0.0 + self.conversion.cam_y
+        target_pose.position.x = 0.43 + self.cam_x
+        target_pose.position.y = 0.0 + self.cam_y
         target_pose.position.z = 0.10
         q = quaternion_from_euler(-3.14, 0.0, -3.14/2.0)  # 上方から掴みに行く場合
         target_pose.orientation.x = q[0]
