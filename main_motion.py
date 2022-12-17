@@ -83,19 +83,12 @@ class Home(object):
             gripper.go()
             rospy.sleep(0.7)
 
-
-
-
         #確率で左右どちらかを決める
         ran = random.randint(1, 2)
         if ran == 1:
             pos_y = 0.2
         else:
             pos_y = -0.2
-
-
-
-
 
         # 掴む準備をする
         target_pose = geometry_msgs.msg.Pose()
