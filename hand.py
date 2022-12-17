@@ -18,7 +18,7 @@ def main():
   hand_position_x = rospy.Publisher('hand_topic_x', Float32, queue_size=10)
   hand_position_y = rospy.Publisher('hand_topic_y', Float32, queue_size=10)
 
-  #カメラの認識番号に合わせる必要があります。
+  #カメラの認識番号に合わせる必要があります
   cap = cv2.VideoCapture(4)
   with mp_hands.Hands(
       model_complexity=0,
