@@ -59,7 +59,7 @@ class Home(object):
         self._client.send_goal(self._goal,feedback_cb=self.feedback)
     
     def callback(self, msg):
-        
+    
         self.hand1_x = msg.points[0].x
         self.hand1_y = msg.points[0].y
 
@@ -79,19 +79,15 @@ class Home(object):
 
 
     def conversion(self):
-        try:
-            # カメラ座標を持ってくる
-            self.cam_x = self.hand1_y
-            self.cam_y = self.hand1_x
-            inversion = -1 #カメラが逆さに付いているので
-            ratio_cm = 0.05 #[cm] あるカメラ座標の値のときのアーム座標のずれ
-            self.cam_x = (self.cam_x + ratio_cm) * inversion
-            self.cam_y = (self.cam_y + ratio_cm) * inversion
-            print('\n\033[33m' + 'x:' + self.cam_x + 'y:' + self.cam_y + '\033[0m\n')
-        except:
-            self.cam_x = 0
-            self.cam_y = 0
-            print('\n\033[33mno camera coordinates\033[0m\n')
+        # カメラ座標を持ってくる
+        self.cam_x = self.hand1_x
+        self.cam_y = self.hand1_y
+        inversion = -1 #カメラが逆さに付いているので
+        ratio_cm = 0.05 #[cm] あるカメラ座標の値のときのアーム座標のずれ
+        self.cam_x = (self.cam_x + ratio_cm) * inversion
+        self.cam_y = (self.cam_y + ratio_cm) * inversion
+        print('\n\033[33m' + 'x:' + self.cam_x + 'y:' + self.cam_y + '\033[0m\n')
+
 
     def motion(self):
         gc = Home()
