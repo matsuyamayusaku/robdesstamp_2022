@@ -16,44 +16,83 @@
 # limitations under the License.
 
 import rospy
+import sys
 import moveit_commander
+import actionlib
 import geometry_msgs.msg
 import rosnode
-from tf.transformations import quaternion_from_euler
-from std_msgs.msg import Float32
-from robotdesign3_2021_1.msg import CustomArray
-import message_filters
 import random
-import sys
-import time
-import actionlib
+from tf import transformations
+from tf.transformations import quaternion_from_euler
 import math
-from std_msgs.msg import Float64
+from geometry_msgs.msg import Point
+from robotdesign3_2021_1.msg import CustomArray
 from control_msgs.msg import (
     GripperCommandAction,
     GripperCommandGoal
 )
 
+
 class Home(object):
 
+    def __init__(self):
+        rospy.init_node("motion")
+        rospy.Subscriber('/hand_topic', CustomArray, self.callback, queue_size=1)
+        self._client = actionlib.SimpleActionClient("/crane_x7/gripper_controller/gripper_cmd",GripperCommandAction)
+        self._goal = GripperCommandGoal()
+        self.robot = moveit_commander.RobotCommander()
+        self.array_points = CustomArray()
+
+        self._client.wait_for_server(rospy.Duration(10.0))
+        if not self._client.wait_for_server(rospy.Duration(10.0)):
+            rospy.logerr("txiting - Gripper Action Server Not Found.")
+            rospy.signal_shutdown("Action Server not found.")
+            sys.exit(1)
+        self.clear()
+        
+        self.hand1_x = 0
+        self.hand1_y = 0
+
+    def command(self, position, effort):
+        self._goal.command.position = position
+        self._goal.command.max_effort = effort
+        self._client.send_goal(self._goal,feedback_cb=self.feedback)
+    
+    def callback(self, msg):
+    
+        self.hand1_x = msg.points[0].x
+        self.hand1_y = msg.points[0].y
+        print(self.hand1_x, self.hand1_y)
+
+    def feedback(self,msg):
+        print("feedback callback")
+        print(msg)
+
+    def stop(self):
+        self._client.cancel_goal()
+        
+    def wait(self, timeout=0.1 ):
+        self._client.wait_for_result(timeout=rospy.Duration(timeout))
+        return self._client.get_result()
+
+    def clear(self):
+        self._goal = GripperCommandGoal()
+
+
     def conversion(self):
-        try:
-            # カメラ座標を持ってくる
-            self.cam_x = message_filters.Subscriber("hand_topic_x", CustomArray)
-            self.cam_y = message_filters.Subscriber("hand_topic_y", CustomArray)
-            inversion = -1 #カメラが逆さに付いているので
-            ratio_cm = 0.05 #[cm] あるカメラ座標の値のときのアーム座標のずれ
-            self.cam_x = (self.cam_x + ratio_cm) * inversion
-            self.cam_y = (self.cam_y + ratio_cm) * inversion
-            print('x:' + self.cam_x + 'y:' + self.cam_y)
-        except:
-            self.cam_x = 0
-            self.cam_y = 0
-            print('no camera coordinates')
+        # カメラ座標を持ってくる
+        self.cam_x = self.hand1_x
+        self.cam_y = self.hand1_y
+        inversion = -1 #カメラが逆さに付いているので
+        ratio_cm = 0.05 #[cm] あるカメラ座標の値のときのアーム座標のずれ
+        self.cam_x = (self.cam_x + ratio_cm) * inversion
+        self.cam_y = (self.cam_y + ratio_cm) * inversion
+        print(self.cam_y)
+        #print('\n\033[33m' + 'x:' + self.cam_x + 'y:' + self.cam_y + '\033[0m\n')
+
 
     def motion(self):
-        rospy.init_node("motion")
-        self.robot = moveit_commander.RobotCommander()
+        gc = Home()
         arm = moveit_commander.MoveGroupCommander("arm")
         arm.set_max_velocity_scaling_factor(0.12)
         arm.set_max_acceleration_scaling_factor(0.5)
@@ -85,16 +124,13 @@ class Home(object):
         gripper.go()
 
         # 顔を認識するふり（ハンドを動かす）
-        for gupa in range(3):
+        for gupa in range(2):
             gripper.set_joint_value_target([0.9, 0.9])
             gripper.go()
-            rospy.sleep(0.7)
+            rospy.sleep(0.5)
             gripper.set_joint_value_target([0.3, 0.3])
             gripper.go()
-            rospy.sleep(0.7)
-
-
-
+            rospy.sleep(0.5)
 
         #確率で左右どちらかを決める
         ran = random.randint(1, 2)
@@ -102,10 +138,6 @@ class Home(object):
             pos_y = 0.2
         else:
             pos_y = -0.2
-
-
-
-
 
         # 掴む準備をする
         target_pose = geometry_msgs.msg.Pose()
@@ -128,7 +160,7 @@ class Home(object):
         target_pose = geometry_msgs.msg.Pose()
         target_pose.position.x = 0.2
         target_pose.position.y = pos_y
-        target_pose.position.z = 0.10
+        target_pose.position.z = 0.11
         q = quaternion_from_euler(-3.14, 0.0, -3.14/2.0)  # 上方から掴みに行く場合
         target_pose.orientation.x = q[0]
         target_pose.orientation.y = q[1]
@@ -138,7 +170,7 @@ class Home(object):
         arm.go()  # 実行
 
         # ハンドを閉じる
-        gripper.set_joint_value_target([0.3, 0.3])
+        gripper.set_joint_value_target([0.2, 0.2])
         gripper.go()
 
         # 持ち上げる
@@ -152,7 +184,7 @@ class Home(object):
         target_pose.orientation.z = q[2]
         target_pose.orientation.w = q[3]
         arm.set_pose_target(target_pose)  # 目標ポーズ設定
-        print('I got a stamp!')
+        print('\n\033[33mI got a stamp!\033[0m\n')
         arm.go()							# 実行
 
         # 移動する
@@ -167,15 +199,25 @@ class Home(object):
         target_pose.orientation.w = q[3]
         arm.set_pose_target(target_pose)  # 目標ポーズ設定
         arm.go()  # 実行
-        print("I'll stamp!!")
+        print("\n\033[33mI'll stamp!!\033[0m\n")
+        rospy.sleep(2.0)
 
-        self.conversion()
+        #self.conversion()
 
+
+    
         # 下ろす
+        hand1_x_buff = 0.26 + self.hand1_y - 0.045
+        hand1_y_buff = (self.hand1_x + 0.05)
         target_pose = geometry_msgs.msg.Pose()
-        target_pose.position.x = 0.43 + self.cam_x
-        target_pose.position.y = 0.0 + self.cam_y
-        target_pose.position.z = 0.10
+        target_joint_values = arm.get_current_joint_values()
+        target_pose.position.x = hand1_x_buff
+        target_pose.position.y = hand1_y_buff
+        print(target_pose.position.x, target_pose.position.y)
+        #target_pose = geometry_msgs.msg.Pose()
+        #target_pose.position.x = 0.3 + self.cam_x - 0.01
+        #target_pose.position.y = 0.0 + self.cam_y
+        target_pose.position.z = 0.12
         q = quaternion_from_euler(-3.14, 0.0, -3.14/2.0)  # 上方から掴みに行く場合
         target_pose.orientation.x = q[0]
         target_pose.orientation.y = q[1]
@@ -183,7 +225,7 @@ class Home(object):
         target_pose.orientation.w = q[3]
         arm.set_pose_target(target_pose)  # 目標ポーズ設定
         arm.go()  # 実行
-        print('pon')
+        print('\n\033[33mpon\033[0m\n')#####
         rospy.sleep(1.0)
 
         # 少しだけハンドを持ち上げる
@@ -203,7 +245,7 @@ class Home(object):
         # どんなスタンプを押したのか見せつける
         arm.set_named_target("home")
         arm.go()
-        print('Ta-da!!!!')
+        print('\n\033[33mTa-da!!!!\033[0m\n')#######
         rospy.sleep(2.0)
 
 
@@ -229,6 +271,7 @@ class Home(object):
         target_pose.position.x = 0.15
         target_pose.position.y = pos_y
         target_pose.position.z = 0.3
+
         q = quaternion_from_euler(-3.14, 0.0, -3.14/2.0)  # 上方から掴みに行く場合
         target_pose.orientation.x = q[0]
         target_pose.orientation.y = q[1]
@@ -262,8 +305,5 @@ class Home(object):
 
 
 if __name__ == '__main__':
-    try:
-        while not rospy.is_shutdown():
-            Home().run()
-    except rospy.ROSInterruptException:
-        pass
+    while not rospy.is_shutdown():
+        Home().run()
