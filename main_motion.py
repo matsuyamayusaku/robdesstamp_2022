@@ -20,7 +20,7 @@ import moveit_commander
 import geometry_msgs.msg
 import rosnode
 from tf.transformations import quaternion_from_euler
-from std_msgs.msg import Float32
+from std_msgs.msg import Float64
 import message_filters
 import random
 
@@ -29,8 +29,8 @@ class Home(object):
     def conversion(self):
         try:
             # カメラ座標を持ってくる
-            self.cam_x = message_filters.Subscriber("hand_topic_x", Float32)
-            self.cam_y = message_filters.Subscriber("hand_topic_y", Float32)
+            self.cam_x = message_filters.Subscriber("hand_topic_x", Float64)
+            self.cam_y = message_filters.Subscriber("hand_topic_y", Float64)
             inversion = -1 #カメラが逆さに付いているので
             ratio_cm = 0.05 #[cm] あるカメラ座標の値のときのアーム座標のずれ
             self.cam_x = (self.cam_x + ratio_cm) * inversion
@@ -234,7 +234,8 @@ class Home(object):
             while not rospy.is_shutdown():
                 #enterが押されるまで待機
                 try:
-                    input('\n\033[33m__STANDBY__\npress"enter"\033[0m\n')
+                    print('\n\033[33m__STANDBY__\npress"enter"\033[0m\n')
+                    input()
                     print('START')
                 except:
                     print('START')
