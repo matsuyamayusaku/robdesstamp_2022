@@ -74,7 +74,8 @@ roslaunch robdesstamp_2022 main.launch
 "Enter"を押すことで動き始めます。
 
 
-## 動作概要
+## 参考
+### 動作概要
 
 1. “Enter”が押されたら2へ進む。
 2. 固定の動きによりスタンプを取る。(左右どちらかになるかはrandomを利用)
