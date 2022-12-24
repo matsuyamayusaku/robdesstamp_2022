@@ -1,4 +1,4 @@
-# RobdesStamp_2022
+# robdesstamp_2022
 
 ## パッケージについて
 このパッケージは[オリジナル](https://github.com/rt-net/crane_x7_ros)である株式会社アールティ様のパッケージを使用して、千葉工業大学未来ロボティクス学科の2021年度の設計製作論3という講義で[知能コース1班が作成したもの](https://github.com/MakiSakurai/robotdesign3_2021_1)を使用した、2022年度のミラノ風ドドリアさん班が作成したものです。
