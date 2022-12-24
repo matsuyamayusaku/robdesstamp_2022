@@ -40,12 +40,6 @@ cd ~/catkin_ws/src
 git clone https://github.com/rt-net/crane_x7_ros.git
 ```
 
-- このパッケージは、RealSenseD435を使用することを想定しているので、RealSenseD435のシミュレーターのモデルの適用のため、Kuwamai様が公開されているcrane_x7_d435をダウロードします
-```
-cd ~/catkin_ws/src
-git clone https://github.com/Kuwamai/crane_x7_d435.git
-```
-
 - catkin buildを使用して本パッケージをビルドします
 ```
 cd ~/catkin
@@ -57,12 +51,6 @@ source ~/catkin_ws/devel/setup.bash
 
 
 ## 使用方法
-
-### シミュレーター起動用コマンド
-
-```
-今のとこはない。
-```
 
 ### 実機起動用コマンド
 
