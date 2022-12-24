@@ -1,13 +1,13 @@
 # RobdesStamp_2022
 
 ## パッケージについて
-このパッケージは[オリジナル](https://github.com/rt-net/crane_x7_ros)である株式会社アールティ様のパッケージを使用して、千葉工業大学未来ロボティクス学科の2021年度の設計製作論3という講義で知能コース1班が作成したものを使用した、2022年度のミラノ風ドドリアさん班が作成したものです。
+このパッケージは[オリジナル](https://github.com/rt-net/crane_x7_ros)である株式会社アールティ様のパッケージを使用して、千葉工業大学未来ロボティクス学科の2021年度の設計製作論3という講義で[知能コース1班が作成したもの](https://github.com/MakiSakurai/robotdesign3_2021_1)を使用した、2022年度のミラノ風ドドリアさん班が作成したものです。
 ## 概要
 このリポジトリは、株式会社アールティ様が販売されているcrane_x7を制御し手にスタンプを押させるパッケージです。
 このパッケージを使用する際カメラが必要になりますが、今回はRealSenseD435の使用を前提としています。
 また、手の検出をする際に Google LLC様の[MediaPipe](https://github.com/google/mediapipe)を使用しています。
 
-![image](https://user-images.githubusercontent.com/71488377/149614905-e17dba93-1e87-435e-b931-933f89a889c4.png)
+![RPReplay_Final1671362546](https://user-images.githubusercontent.com/83112617/209423541-41801fcb-1822-4a1c-9854-b118de171054.gif)
 
 
 
@@ -15,7 +15,7 @@
 
 以下の画像のようにカメラ画像から手を検出し、各関節の座標を取得します。この取得した座標をもとに、手の甲の指定の位置（緑の円マーク）にマニピュレータがスタンプを押します。
 
-![image](https://user-images.githubusercontent.com/71488377/149612675-90df7be8-6dd9-4923-abc3-fcecb6775b36.png)
+![スクリーンショット 2022-12-24 150832](https://user-images.githubusercontent.com/83112617/209423853-595c86eb-33ca-43a6-8c83-39eb7b30c53a.png)
 
 ## 動作環境
 OS : Ubuntu 18.04LTS
@@ -28,10 +28,10 @@ Rviz 1.13.21
 
 ## セットアップ方法
 
-- gitを使用して、robotdesign3_2021_1をダウロードします
+- gitを使用して、robdesstamp_2022をダウロードします
 ```
 cd ~/catkin_ws/src
-git clone https://github.com/MakiSakurai/robotdesign3_2021_1.git
+git clone git@github.com:matsuyamayusaku/robdesstamp_2022.git
 ```
 
 - 株式会社アールティ様から配布されているcrane_x7_rosをダウロードします
@@ -53,7 +53,7 @@ catkin build
 source ~/catkin_ws/devel/setup.bash
 ```
 
-- 今回カメラを使用しますが、[robotdesign3_2021_1/hand_coordinates.pyの18行目](https://github.com/MakiSakurai/robotdesign3_2021_1/blob/main/hand_coordinates.py#:~:text=cap%20%3D%20cv2.VideoCapture(-,4,-))を使用しているカメラが認識されている/dev/videoの番号に変更してください
+- 今回カメラを使用しますが、[robdesstamp3_2022/scripts/hand.pyの21行目](https://github.com/matsuyamayusaku/robdesstamp_2022/blob/2cc694d6585962ef92bf7c5f3fa2c32a289f5ae8/scripts/hand.py#L21)を使用しているカメラが認識されている/dev/videoの番号に変更してください
 
 
 ## 使用方法
@@ -61,7 +61,7 @@ source ~/catkin_ws/devel/setup.bash
 ### シミュレーター起動用コマンド
 
 ```
-roslaunch robotdesign3_2021_1 main_sim.launch
+今のとこはない。
 ```
 
 ### 実機起動用コマンド
@@ -69,20 +69,25 @@ roslaunch robotdesign3_2021_1 main_sim.launch
 crane_x7をPCに接続し、以下のコマンドを実行してデバイスドライバに実行権限を与えてから起動します
 ```
 sudo chmod 666 /dev/ttyUSB0
-roslaunch robotdesign3_2021_1 main.launch
+roslaunch robdesstamp_2022 main.launch
 ```
+"Enter"を押すことで動き始めます。
 
 
-## 参考用
+## 動作概要
 
-以下の手順で動かすと、安定して指すことができます
-
-![スクリーンショット 2021-12-27 232127](https://user-images.githubusercontent.com/71488377/147767505-4808c209-2b6e-456e-90a0-8ad1a7e12a70.png)
+1. “Enter”が押されたら2へ進む。
+2. 固定の動きによりスタンプを取る。(左右どちらかになるかはrandomを利用)
+3. MediaPipeによる手の認識を用いてスタンプを押す。
+4. どのようなスタンプが押されたか見せびらかす。
+5. スタンプを元の場所へ戻し、Homeポジションへ戻る。
+6. 手順1へ戻る
 
 
 ### 動いている様子
 
-https://youtu.be/zFIe7depjOk
+![IMG_1999](https://user-images.githubusercontent.com/83112617/209424087-ebd4edfc-2b2c-4182-8ae6-9fcc472e6e62.jpg)
+https://youtu.be/u1fWdKh3Oak
 
 ## ライセンス
 
