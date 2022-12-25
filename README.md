@@ -18,7 +18,7 @@
 ![スクリーンショット 2022-12-24 150832](https://user-images.githubusercontent.com/83112617/209423853-595c86eb-33ca-43a6-8c83-39eb7b30c53a.png)
 
 ## 動作環境
-OS : Ubuntu 18.04LTS
+OS : Ubuntu 20.04LTS
 
 ROS Distribution: Melodic Morenia
 
@@ -47,7 +47,7 @@ catkin build
 source ~/catkin_ws/devel/setup.bash
 ```
 
-- 今回カメラを使用しますが、[robdesstamp3_2022/scripts/hand.pyの21行目](https://github.com/matsuyamayusaku/robdesstamp_2022/blob/2cc694d6585962ef92bf7c5f3fa2c32a289f5ae8/scripts/hand.py#L21)を使用しているカメラが認識されている/dev/videoの番号に変更してください
+- 今回カメラを使用しますが、[robdesstamp_2022/scripts/hand.pyの21行目](https://github.com/matsuyamayusaku/robdesstamp_2022/blob/2cc694d6585962ef92bf7c5f3fa2c32a289f5ae8/scripts/hand.py#L21)を使用しているカメラが認識されている/dev/videoの番号に変更してください
 
 
 ## 使用方法
